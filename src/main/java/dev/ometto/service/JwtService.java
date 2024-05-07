@@ -6,6 +6,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import dev.ometto.config.JwtProperties;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -20,9 +21,9 @@ public class JwtService {
         this.jwtProperties = jwtProperties;
     }
 
-    public String generateJwt() {
+    public String generateJwt(Authentication authentication) {
         var header = new JWSHeader(jwtProperties.getAlgorithm());
-        var claimsSet = buildClaims();
+        var claimsSet = buildClaims(authentication);
 
         var jwt = new SignedJWT(header, claimsSet);
 
@@ -35,13 +36,14 @@ public class JwtService {
         return jwt.serialize();
     }
 
-    private JWTClaimsSet buildClaims() {
+    private JWTClaimsSet buildClaims(Authentication authentication) {
         var issuedAt = Instant.now();
         var expiration = issuedAt.plus(jwtProperties.getExpiresIn());
 
         var builder = new JWTClaimsSet.Builder()
-                .issuer(jwtProperties.getIssuer())
+                .issuer("self")
                 .issueTime(Date.from(issuedAt))
+                .subject(authentication.getName())
                 .expirationTime(Date.from(expiration));
 
         return builder.build();

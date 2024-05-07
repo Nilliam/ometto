@@ -7,10 +7,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -21,6 +23,11 @@ public class SecurityConfig {
 
     public SecurityConfig(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
+    }
+
+    @Bean
+    public InMemoryUserDetailsManager users() {
+        return new InMemoryUserDetailsManager(User.withUsername("test").password("{noop}test").build());
     }
 
     @Bean
@@ -35,8 +42,11 @@ public class SecurityConfig {
                 .exceptionHandling(
                         (ex) -> ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
+                .httpBasic(Customizer.withDefaults())
                 .build();
     }
+
+
 
     @Bean
     public JwtDecoder jwtDecoder() {

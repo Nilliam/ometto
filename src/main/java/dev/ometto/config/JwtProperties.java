@@ -13,8 +13,6 @@ public class JwtProperties {
 
     private SecretKey secretKey;
 
-    private String issuer;
-
     private JWSAlgorithm algorithm;
 
     private Duration expiresIn;
@@ -28,14 +26,6 @@ public class JwtProperties {
                 .algorithm(algorithm)
                 .build();
         this.secretKey = jwk.toSecretKey();
-    }
-
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public void setIssuer(String issuer) {
-        this.issuer = issuer;
     }
 
     public JWSAlgorithm getAlgorithm() {
