@@ -1,10 +1,10 @@
 package dev.ometto.controller;
 
 import dev.ometto.service.JwtService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,10 +18,9 @@ public class AuthController {
         this.jwtService = jwtService;
     }
 
-    @GetMapping("token")
+    @PostMapping("token")
     public String token(Authentication authentication) {
-        LOG.debug("To Do ** token generation");
-        return jwtService.generateJwt();
+        return jwtService.generateJwt(authentication);
     }
 
 }
