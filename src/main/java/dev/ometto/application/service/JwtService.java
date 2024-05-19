@@ -1,4 +1,4 @@
-package dev.ometto.service;
+package dev.ometto.application.service;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSHeader;
